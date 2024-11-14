@@ -1,0 +1,32 @@
+{
+   "name": "icabanken.se",
+   "version": "1.0.0",
+   "description": "",
+   "main": "index.js",
+   "scripts": {
+      "playwright:update": "npm install -D @playwright/test@latest && npx playwright install --with-deps",
+      "test:test": "cross-env ENV_FILE=test playwright test --project=chromium",
+      "test:ver": "cross-env ENV_FILE=ver playwright test --project=chromium --headed",
+      "prettier:write": "prettier --write ."
+   },
+   "keywords": [],
+   "author": "",
+   "license": "ISC",
+   "dependencies": {
+      "axios": "^1.6.2",
+      "axios-cookiejar-support": "^4.0.7",
+      "cross-env": "^7.0.3",
+      "dotenv": "^16.4.5",
+      "ibm_db": "^3.2.1",
+      "msnodesqlv8": "^4.1.0",
+      "mssql": "^10.0.0",
+      "playwright": "^1.40.1",
+      "prettier": "^3.0.3",
+      "tough-cookie": "^4.1.3",
+      "uuid": "^9.0.0"
+   },
+   "devDependencies": {
+      "@playwright/test": "^1.44.1",
+      "@types/node": "^20.6.5"
+   }
+}

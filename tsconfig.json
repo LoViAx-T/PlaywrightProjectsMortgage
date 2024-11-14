@@ -1,0 +1,9 @@
+{
+   "compilerOptions": {
+      "esModuleInterop": true,
+      // ...
+      "lib": ["ES2021.String", "DOM"],
+      "target":"ES5"
+   }
+   // ...
+}

@@ -1,0 +1,65 @@
+parameters:
+  - name: runFunds
+    displayName: 'Web - Run Funds tests'
+    type: boolean
+    default: false
+  - name: runBolan
+    displayName: 'Web - Run Bolån tests'
+    type: boolean
+    default: false
+  - name: runOppnaSparkonto
+    displayName: 'Web - Run Öppna Sparkonto tests'
+    type: boolean
+    default: false
+
+trigger: none
+
+## Will not build because can't download npm
+## pool:
+  ##name: 'Test Automation OnPrem SEBVM5628T'
+
+## Will build and run but uses bank build agents, use sparingly until we have our own agent pool
+pool: "ICA.Bank.TechTest"
+
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '18'
+  displayName: 'Install Node.js'
+- script: npm ci
+  displayName: 'npm ci'
+- script: npx playwright install --with-deps
+  displayName: 'Install Playwright browsers'
+
+- ${{ if eq(parameters.runFunds, true) }}:
+  - script: npx playwright test ./tests/funds/ --project=chromium
+    displayName: 'Run Playwright test located in Funds'
+    env:
+      CI: 'true'
+      ENV_FILE: 'ver'
+
+- ${{ if eq(parameters.runBolan, true) }}:
+  - script: npx playwright test ./tests/bolan/ --project=chromium
+    displayName: 'Run Playwright test located in Bolan'
+    env:
+      CI: 'true'
+      ENV_FILE: 'ver'
+
+- ${{ if eq(parameters.runOppnaSparkonto, true) }}:
+  - script: npx playwright test ./tests/oppna-sparkonto/ --project=chromium
+    displayName: 'Run Playwright test located in oppna-sparkonto'
+    env:
+      CI: 'true'
+      ENV_FILE: 'ver'
+
+- task: PublishTestResults@2
+  displayName: 'Publish test results'
+  inputs:
+    searchFolder: 'test-results'
+    testResultsFormat: 'JUnit'
+    testResultsFiles: 'results.xml'
+    mergeTestResults: true
+    failTaskOnFailedTests: true
+    testRunTitle: 'Web tests with Playwright'
+  condition: succeededOrFailed()
